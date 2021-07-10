@@ -41,7 +41,7 @@ export class AdminComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const book =  new Book(Number(this.bookForm.value.id),
+    const book =  new Book(this.bookForm.value.id,
       this.bookForm.value.category,
       this.bookForm.value.title,
       Number(this.bookForm.value.cost),
