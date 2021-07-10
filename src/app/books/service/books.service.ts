@@ -3,7 +3,7 @@ import {Author, Book} from '../model/book';
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
 import {Observable} from 'rxjs';
-import {ApolloQueryResult} from '@apollo/client/core';
+import {ApolloQueryResult, FetchResult} from '@apollo/client/core';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +56,32 @@ export class BooksService {
     // return new Observable(subs => {subs.next(null); });
   }
 
-  public addBook(b: Book): void {
+  public addBook(b: Book): Observable<FetchResult<unknown>> {
     // this.books.push(b);
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation newBook($category: String!,
+            $title: String!,
+            $cost: Float!,
+            $year: String,
+            $description: String){
+        newBook(category: $category,
+                title: $title,
+                cost: $cost,
+                year: $year,
+                description: $description) {
+                    id
+                }
+        }
+      `,
+      variables: {
+        category: b.category,
+        title: b.title,
+        cost: b.cost,
+        year: b.year,
+        description: b.description
+      }
+    }
+    );
   }
 }
