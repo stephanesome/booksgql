@@ -10,7 +10,7 @@ import {AdminComponent} from './admin/admin.component';
 import {LoggedInGuard} from './logged-in.guard';
 
 const booksRoutes: Routes = [
-  {path: ':id', component: BookComponent}
+  {path: ':bookNumber', component: BookComponent}
 ];
 
 const routes: Routes = [

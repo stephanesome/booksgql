@@ -3,7 +3,7 @@ import {ActivatedRoute, Router, Routes} from '@angular/router';
 import {BookComponent} from './book/book.component';
 
 export const booksRoutes: Routes = [
-  {path: ':id', component: BookComponent}
+  {path: ':bookNumber', component: BookComponent}
 ];
 
 @Component({

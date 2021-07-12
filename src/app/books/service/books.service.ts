@@ -19,15 +19,16 @@ export class BooksService {
 
   constructor(private apollo: Apollo) {}
 
-  public getBook(id: string): Observable<ApolloQueryResult<any>> {
+  public getBook(bookNumber: number): Observable<ApolloQueryResult<any>> {
     // tslint:disable-next-line:radix
     // return this.books.find(book => book.id === Number.parseInt(id));
     return this.apollo
     .query<any>({
       query: gql`
-        query($id: ID!) {
-          book(bookId: $id) {
-            id
+        query($bookNumber: Int!) {
+          bookByNumber(bookNumber: $bookNumber) {
+            bookId
+            bookNumber
             category
             title
             cost
@@ -40,7 +41,7 @@ export class BooksService {
         }
       `,
       variables: {
-        id
+        bookNumber
       }
     });
     // .subscribe(({ data, loading }) => {
@@ -60,21 +61,24 @@ export class BooksService {
     // this.books.push(b);
     return this.apollo.mutate({
       mutation: gql`
-        mutation newBook($category: String!,
+        mutation newBook($bookNumber: Int!,
+            $category: String!,
             $title: String!,
             $cost: Float!,
             $year: String,
             $description: String){
-        newBook(category: $category,
+        newBook(bookNumber: $bookNumber,
+                category: $category,
                 title: $title,
                 cost: $cost,
                 year: $year,
                 description: $description) {
-                    id
+                    bookId
                 }
         }
       `,
       variables: {
+        bookNumber: b.bookNumber,
         category: b.category,
         title: b.title,
         cost: b.cost,
@@ -82,6 +86,29 @@ export class BooksService {
         description: b.description
       }
     }
+    );
+  }
+
+  addAuthor(author: Author): Observable<FetchResult<unknown>> {
+    return this.apollo.mutate({
+        mutation: gql`
+          mutation newAuthor($bookNumber: Int!,
+            $firstName: String!,
+            $lastName: String!){
+            newAuthor(bookNumber: $bookNumber,
+              firstName: $firstName,
+              lastName: $lastName) {
+              firstName
+              lastName
+            }
+          }
+        `,
+        variables: {
+          bookNumber: author.bookNumber,
+          firstName: author.firstName,
+          lastName: author.lastName
+        }
+      }
     );
   }
 }
